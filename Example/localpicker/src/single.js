@@ -1,13 +1,18 @@
 /*
  * @Author: xuwei
  * @Date: 2020-11-06 21:51:46
- * @LastEditTime: 2021-02-05 17:00:51
+ * @LastEditTime: 2021-03-01 15:52:54
  * @LastEditors: xuwei
  * @Description:
  */
 import React, {PureComponent} from 'react';
 import {View, Text, StyleSheet, Animated} from 'react-native';
-import {PanGestureHandler, State} from 'react-native-gesture-handler';
+import {
+  PanGestureHandler,
+  State,
+  gestureHandlerRootHOC,
+  GestureHandlerRootView,
+} from 'react-native-gesture-handler';
 
 export class SingleSlide extends PureComponent {
   static defaultProps = {
@@ -169,7 +174,8 @@ export class SingleSlide extends PureComponent {
       height: itemHeight * half,
     };
     return (
-      <View style={[sts.contain, {height: itemHeight * visibleNum}]}>
+      <GestureHandlerRootView
+        style={[sts.contain, {height: itemHeight * visibleNum}]}>
         <PanGestureHandler
           onGestureEvent={this._onPanGestureEvent}
           onHandlerStateChange={this._onHandlerStateChange}>
@@ -192,7 +198,7 @@ export class SingleSlide extends PureComponent {
             <View style={maskBg} />
           </View>
         </PanGestureHandler>
-      </View>
+      </GestureHandlerRootView>
     );
   }
 }
