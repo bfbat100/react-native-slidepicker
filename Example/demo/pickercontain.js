@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2020-11-18 09:37:11
- * @LastEditTime: 2020-12-04 15:29:42
+ * @LastEditTime: 2021-03-08 12:27:18
  * @LastEditors: xuwei
  * @Description:
  */
@@ -31,6 +31,8 @@ export class AbsoContain extends PureComponent {
 export const ModalContain = React.memo(({isModalShow, children}) => {
   return (
     <Modal
+      // 应用在 stacknavigation 时需要false
+      coverScreen={false}
       backdropColor={'#000'}
       backdropOpacity={0.6}
       backdropTransitionOutTiming={0}
