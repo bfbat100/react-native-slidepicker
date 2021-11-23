@@ -12,19 +12,39 @@ import {SingleSlide} from './single';
 export class IndependentPicker extends PureComponent {
   constructor(props) {
     super(props);
+    this.state = {
+      selectedIndex:this.props.defaultValueIndexes ? this.props.defaultValueIndexes[0] : 0//记录当前选中数据index
+    }
     this._initData();
   }
 
   _initData = () => {
     const {dataSource} = this.props;
     dataSource.forEach((element, index) => {
-      this.props.setResult(index, element[0]);
+      // 第一列数据如果当前选中项有联动数据则第二项列表使用第一项的联动数据，否则使用默认的数据
+      if(index == 1 && element[0].list){
+        this.props.setResult(index, element[0].list[0]);
+      }else{
+        this.props.setResult(index, element[0]);
+      }
     });
   };
 
   _done = (dataindex, parindex) => {
     const {dataSource, onceChange} = this.props;
-    const list = dataSource[parindex];
+    let list = dataSource[parindex];
+    // 设置当前选中选项的index
+    let selectedIndex = this.state.selectedIndex;
+    if(parindex == 0){
+      selectedIndex = dataindex;
+    }
+    this.setState({
+      selectedIndex
+    })
+    // 第一列数据如果当前选中项有联动数据则第二项列表使用第一项的联动数据，否则使用默认的数据
+    if(parindex == 1 && dataSource[0][selectedIndex].list){
+      list = dataSource[0][selectedIndex].list;
+    }
     this.props.setResult(parindex, list[dataindex]);
     onceChange && onceChange();
   };
@@ -33,16 +53,31 @@ export class IndependentPicker extends PureComponent {
     const {dataSource, pickerStyle, defaultValueIndexes} = this.props;
     return (
       <View style={sts.all}>
-        {dataSource.map((list, index) => (
-          <SingleSlide
-            list={list}
-            key={index}
-            inparindex={index}
-            done={this._done}
-            defaultIndex={defaultValueIndexes ? defaultValueIndexes[index] : 0}
-            {...pickerStyle}
-          />
-        ))}
+        {dataSource.map((list, index) => {
+          // 第一列数据如果当前选中项有联动数据则第二项列表使用第一项的联动数据，否则使用默认的数据
+          if(index == 1 && dataSource[0][this.state.selectedIndex].list){
+            return (
+              <SingleSlide
+                list={dataSource[0][this.state.selectedIndex].list}
+                key={index}
+                inparindex={index}
+                done={this._done}
+                defaultIndex={defaultValueIndexes ? defaultValueIndexes[index] : 0}
+                {...pickerStyle}
+              />
+            )
+          }
+          return (
+            <SingleSlide
+              list={list}
+              key={index}
+              inparindex={index}
+              done={this._done}
+              defaultIndex={defaultValueIndexes ? defaultValueIndexes[index] : 0}
+              {...pickerStyle}
+            />
+          )
+        })}
       </View>
     );
   }
