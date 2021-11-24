@@ -36,11 +36,15 @@ export class IndependentPicker extends PureComponent {
     // 设置当前选中选项的index
     let selectedIndex = this.state.selectedIndex;
     if(parindex == 0){
+      // 滚动第一列并且选中数据是上一次或者本次是有联动数据的项，则需要把当前记录的选中第二项index重置
+      if(dataSource[0][this.state.selectedIndex].list || dataSource[0][dataindex].list){
+        this.props.setResult(1, dataSource[0][dataindex].list ? dataSource[0][dataindex].list[0] : dataSource[1][0]);
+      }
       selectedIndex = dataindex;
+      this.setState({
+        selectedIndex
+      })
     }
-    this.setState({
-      selectedIndex
-    })
     // 第一列数据如果当前选中项有联动数据则第二项列表使用第一项的联动数据，否则使用默认的数据
     if(parindex == 1 && dataSource[0][selectedIndex].list){
       list = dataSource[0][selectedIndex].list;
